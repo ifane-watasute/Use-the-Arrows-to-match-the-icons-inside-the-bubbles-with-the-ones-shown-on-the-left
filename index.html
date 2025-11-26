@@ -10,7 +10,7 @@
             font-family: "Helvetica Neue", Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #fcf0f5; /* パステルピンク背景 */
+            background-color: #fcf0f5;
             color: #333;
             display: flex;
             flex-direction: column;
@@ -28,20 +28,20 @@
         #avatar-display {
             width: 300px;
             height: 300px;
-            background-color: #fff; /* ※保存時はここは透過されます */
+            background-color: #fff;
             border-radius: 20px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             position: relative;
             overflow: hidden;
             margin-bottom: 20px;
-            /* 背景市松模様（透過がわかるように） */
+            /* 背景の市松模様（透過確認用） */
             background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee), 
                               linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee);
             background-size: 20px 20px;
             background-position: 0 0, 10px 10px;
         }
 
-        /* レイヤー設定 */
+        /* 画像レイヤー */
         .avatar-layer {
             position: absolute;
             top: 0;
@@ -52,16 +52,16 @@
             pointer-events: none;
         }
 
-        /* --- 重ね順（Z-index）の定義 --- */
-        /* 数字が大きいほど手前に来ます */
-        #layer-hair-back { z-index: 10; }   /* 後ろ髪 */
-        #layer-body      { z-index: 20; }   /* 素体（必須） */
-        #layer-eyes      { z-index: 30; }   /* 目 */
-        #layer-mouth     { z-index: 35; }   /* 口 */
-        #layer-outfit    { z-index: 40; }   /* 服 */
-        #layer-hair-front{ z-index: 50; }   /* 前髪 */
-        #layer-accessory { z-index: 60; }   /* アクセサリー */
-        #layer-frame     { z-index: 100; }  /* フレーム（最前面） */
+        /* --- 重ね順（Z-index） --- */
+        #layer-background { z-index: 5; }   /* 背景（将来用） */
+        #layer-hair-back  { z-index: 10; }  /* 後ろ髪 */
+        #layer-body       { z-index: 20; }  /* 素体 */
+        #layer-eyes       { z-index: 30; }  /* 目 */
+        #layer-mouth      { z-index: 35; }  /* 口 */
+        #layer-outfit     { z-index: 40; }  /* 服 */
+        #layer-hair-front { z-index: 50; }  /* 前髪 */
+        #layer-accessory  { z-index: 60; }  /* アクセ（将来用） */
+        #layer-frame      { z-index: 100; } /* フレーム（将来用） */
 
         /* 操作パネル */
         #controls {
@@ -91,7 +91,7 @@
             color: #aaa;
             cursor: pointer;
             font-size: 0.85rem;
-            flex-shrink: 0; /* 縮まないように */
+            flex-shrink: 0;
         }
         .tab-btn.active {
             color: #ff8fab;
@@ -117,176 +117,4 @@
             border-radius: 8px;
             cursor: pointer;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            flex-direction: column;
-            text-align: center;
-            padding: 5px;
-        }
-        .item-btn:hover {
-            border-color: #ff8fab;
-            background-color: #fff0f5;
-        }
-        
-        /* 保存ボタン */
-        #save-btn {
-            margin-top: 20px;
-            margin-bottom: 50px;
-            background-color: #ff8fab;
-            color: white;
-            border: none;
-            padding: 15px 50px;
-            border-radius: 30px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(255, 143, 171, 0.4);
-            transition: transform 0.1s;
-        }
-        #save-btn:active {
-            transform: scale(0.95);
-        }
-
-    </style>
-</head>
-<body>
-
-    <h1>WATASUTE Demo</h1>
-
-    <div id="avatar-display">
-        <img id="layer-hair-back" class="avatar-layer" src="" alt="">
-        <img id="layer-body"      class="avatar-layer" src="assets/body.png" alt="素体">
-        <img id="layer-eyes"      class="avatar-layer" src="" alt="">
-        <img id="layer-mouth"     class="avatar-layer" src="" alt="">
-        <img id="layer-outfit"    class="avatar-layer" src="" alt="">
-        <img id="layer-hair-front"class="avatar-layer" src="" alt="">
-        <img id="layer-accessory" class="avatar-layer" src="" alt="">
-        <img id="layer-frame"     class="avatar-layer" src="" alt="">
-    </div>
-
-    <div id="controls">
-        <div class="tabs">
-            <button class="tab-btn active" onclick="showTab('hair-front')">前髪</button>
-            <button class="tab-btn" onclick="showTab('hair-back')">後髪</button>
-            <button class="tab-btn" onclick="showTab('eyes')">目</button>
-            <button class="tab-btn" onclick="showTab('mouth')">口</button>
-            <button class="tab-btn" onclick="showTab('outfit')">服</button>
-            <button class="tab-btn" onclick="showTab('accessory')">アクセ</button>
-            <button class="tab-btn" onclick="showTab('frame')">フレーム</button>
-        </div>
-
-        <div id="tab-hair-front" class="item-list active">
-            <button class="item-btn" onclick="setPart('layer-hair-front', 'hair1_front')">ロング<br>(前)</button>
-            <button class="item-btn" onclick="setPart('layer-hair-front', 'hair2_front')">ショート<br>(前)</button>
-            <button class="item-btn" onclick="setPart('layer-hair-front', null)">なし</button>
-        </div>
-
-        <div id="tab-hair-back" class="item-list">
-            <button class="item-btn" onclick="setPart('layer-hair-back', 'hair1_back')">ロング<br>(後)</button>
-            <button class="item-btn" onclick="setPart('layer-hair-back', 'hair2_back')">ショート<br>(後)</button>
-            <button class="item-btn" onclick="setPart('layer-hair-back', null)">なし</button>
-        </div>
-
-        <div id="tab-eyes" class="item-list">
-            <button class="item-btn" onclick="setPart('layer-eyes', 'eyes1')">ぱっちり</button>
-            <button class="item-btn" onclick="setPart('layer-eyes', 'eyes2')">ジト目</button>
-            <button class="item-btn" onclick="setPart('layer-eyes', null)">なし</button>
-        </div>
-
-        <div id="tab-mouth" class="item-list">
-            <button class="item-btn" onclick="setPart('layer-mouth', 'mouth1')">笑顔</button>
-            <button class="item-btn" onclick="setPart('layer-mouth', 'mouth2')">真顔</button>
-            <button class="item-btn" onclick="setPart('layer-mouth', null)">なし</button>
-        </div>
-
-        <div id="tab-outfit" class="item-list">
-            <button class="item-btn" onclick="setPart('layer-outfit', 'outfit1')">制服</button>
-            <button class="item-btn" onclick="setPart('layer-outfit', 'outfit2')">ドレス</button>
-            <button class="item-btn" onclick="setPart('layer-outfit', 'outfit3')">メイド</button>
-            <button class="item-btn" onclick="setPart('layer-outfit', null)">脱ぐ</button>
-        </div>
-
-        <div id="tab-accessory" class="item-list">
-            <button class="item-btn" onclick="setPart('layer-accessory', 'accessory1')">リボン</button>
-            <button class="item-btn" onclick="setPart('layer-accessory', 'accessory2')">眼鏡</button>
-            <button class="item-btn" onclick="setPart('layer-accessory', null)">なし</button>
-        </div>
-
-        <div id="tab-frame" class="item-list">
-            <button class="item-btn" onclick="setPart('layer-frame', 'frame1')">キラキラ</button>
-            <button class="item-btn" onclick="setPart('layer-frame', 'frame2')">集中線</button>
-            <button class="item-btn" onclick="setPart('layer-frame', null)">なし</button>
-        </div>
-    </div>
-
-    <button id="save-btn" onclick="downloadImage()">画像を保存する</button>
-
-    <script>
-        /* --- ロジック部分（JavaScript） --- */
-        
-        // タブ切り替え
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.item-list').forEach(list => list.classList.remove('active'));
-            event.target.classList.add('active');
-            document.getElementById('tab-' + tabName).classList.add('active');
-        }
-
-        // パーツ着せ替え
-        function setPart(layerId, imageName) {
-            const layer = document.getElementById(layerId);
-            if (imageName) {
-                layer.src = `assets/${imageName}.png`;
-                layer.style.display = 'block';
-            } else {
-                layer.src = ''; // ソースを空に
-                layer.style.display = 'none';
-            }
-        }
-
-        // ★保存機能（背景透過で合成してダウンロード）★
-        function downloadImage() {
-            // 1. 仮想のキャンバスを作る（サイズはアバター表示エリアに合わせる）
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            const display = document.getElementById('avatar-display');
-            
-            // 画像の元サイズに合わせる（綺麗に出力するため）
-            // ※ここでは統一規格サイズ(例:1000x1500)で描画されるようにします
-            // 基準としてbody画像のサイズを取得してみる
-            const bodyImg = document.getElementById('layer-body');
-            canvas.width = bodyImg.naturalWidth || 1000; 
-            canvas.height = bodyImg.naturalHeight || 1500;
-
-            // 2. 表示されているレイヤーだけを、z-indexの順（奥→手前）に描画
-            // 順番: 後髪 -> 素体 -> 目 -> 口 -> 服 -> 前髪 -> アクセ -> フレーム
-            const layerIds = [
-                'layer-hair-back',
-                'layer-body',
-                'layer-eyes',
-                'layer-mouth',
-                'layer-outfit',
-                'layer-hair-front',
-                'layer-accessory',
-                'layer-frame'
-            ];
-
-            // 順番に描画処理
-            layerIds.forEach(id => {
-                const img = document.getElementById(id);
-                // 画像が表示されていて(display!=none)、かつ読み込み完了している場合のみ描画
-                if (img.style.display !== 'none' && img.src) {
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                }
-            });
-
-            // 3. 画像としてダウンロードさせる
-            const link = document.createElement('a');
-            link.download = 'watasute_avatar.png'; // 保存ファイル名
-            link.href = canvas.toDataURL('image/png'); // PNG形式（背景透過）
-            link.click();
-        }
-    </script>
-</body>
-</html>
+            align
