@@ -48,11 +48,12 @@
         }
 
         /* 順序（Z-index）の定義 */
-        #layer-body { z-index: 10; } /* 素体 */
-        #layer-eyes { z-index: 20; } /* 目 */
-        #layer-hair-back { z-index: 5; } /* 後ろ髪 */
-        #layer-hair-front { z-index: 30; } /* 前髪 */
-        #layer-outfit { z-index: 25; } /* 服 */
+        /* 数字が大きいほど手前に表示されます */
+        #layer-hair-back { z-index: 5; }  /* 一番奥：後ろ髪 */
+        #layer-body { z-index: 10; }      /* 素体 */
+        #layer-eyes { z-index: 20; }      /* 目 */
+        #layer-outfit { z-index: 25; }    /* 服 */
+        #layer-hair-front { z-index: 30; }/* 一番手前：前髪 */
 
         /* 操作パネル */
         #controls {
@@ -67,9 +68,11 @@
         /* タブボタン */
         .tabs {
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between; /* 均等配置 */
             margin-bottom: 15px;
             border-bottom: 2px solid #eee;
+            overflow-x: auto; /* タブが多い場合はスクロール */
+            white-space: nowrap;
         }
         .tab-btn {
             background: none;
@@ -78,6 +81,7 @@
             font-weight: bold;
             color: #aaa;
             cursor: pointer;
+            font-size: 0.9rem;
         }
         .tab-btn.active {
             color: #ff8fab;
@@ -89,6 +93,8 @@
             display: none; /* 初期は非表示 */
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
+            max-height: 300px;
+            overflow-y: auto;
         }
         .item-list.active {
             display: grid; /* 選ばれたタブだけ表示 */
@@ -103,15 +109,18 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
+            flex-direction: column;
+            text-align: center;
         }
         .item-btn:hover {
             border-color: #ff8fab;
         }
-
+        
         /* 保存ボタン */
         #save-btn {
             margin-top: 20px;
+            margin-bottom: 40px;
             background-color: #ff8fab;
             color: white;
             border: none;
@@ -134,7 +143,7 @@
 
     <div id="avatar-display">
         <img id="layer-hair-back" class="avatar-layer" src="" alt="">
-        <img id="layer-body" class="avatar-layer" src="assets/body.png" alt="素体(未設定)">
+        <img id="layer-body" class="avatar-layer" src="assets/body.png" alt="素体">
         <img id="layer-eyes" class="avatar-layer" src="" alt="">
         <img id="layer-outfit" class="avatar-layer" src="" alt="">
         <img id="layer-hair-front" class="avatar-layer" src="" alt="">
@@ -142,15 +151,22 @@
 
     <div id="controls">
         <div class="tabs">
-            <button class="tab-btn active" onclick="showTab('hair')">髪</button>
+            <button class="tab-btn active" onclick="showTab('hair-front')">前髪</button>
+            <button class="tab-btn" onclick="showTab('hair-back')">後髪</button>
             <button class="tab-btn" onclick="showTab('eyes')">目</button>
             <button class="tab-btn" onclick="showTab('outfit')">服</button>
         </div>
 
-        <div id="tab-hair" class="item-list active">
-            <button class="item-btn" onclick="setHair('hair1')">ロング</button>
-            <button class="item-btn" onclick="setHair('hair2')">ショート</button>
-            <button class="item-btn" onclick="setHair(null)">なし</button>
+        <div id="tab-hair-front" class="item-list active">
+            <button class="item-btn" onclick="setPart('layer-hair-front', 'hair1_front')">ロング<br>(前)</button>
+            <button class="item-btn" onclick="setPart('layer-hair-front', 'hair2_front')">ショート<br>(前)</button>
+            <button class="item-btn" onclick="setPart('layer-hair-front', null)">なし</button>
+        </div>
+
+        <div id="tab-hair-back" class="item-list">
+            <button class="item-btn" onclick="setPart('layer-hair-back', 'hair1_back')">ロング<br>(後)</button>
+            <button class="item-btn" onclick="setPart('layer-hair-back', 'hair2_back')">ショート<br>(後)</button>
+            <button class="item-btn" onclick="setPart('layer-hair-back', null)">なし</button>
         </div>
 
         <div id="tab-eyes" class="item-list">
@@ -161,52 +177,38 @@
         <div id="tab-outfit" class="item-list">
             <button class="item-btn" onclick="setPart('layer-outfit', 'outfit1')">制服</button>
             <button class="item-btn" onclick="setPart('layer-outfit', 'outfit2')">ドレス</button>
-             <button class="item-btn" onclick="setPart('layer-outfit', null)">脱ぐ</button>
+            <button class="item-btn" onclick="setPart('layer-outfit', 'outfit3')">メイド</button>
+            <button class="item-btn" onclick="setPart('layer-outfit', null)">脱ぐ</button>
         </div>
     </div>
 
-    <button id="save-btn" onclick="alert('まだ画像がないため保存できませんが、機能はここに付きます！')">画像を保存する</button>
+    <button id="save-btn" onclick="alert('ここに画像保存機能がつきます！')">画像を保存する</button>
 
     <script>
-        /* ロジック部分（JavaScript） */
+        /* ロジック部分 */
         
-        // タブ切り替え機能
+        // タブ切り替え
         function showTab(tabName) {
-            // すべてのタブボタンからactiveを消す
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            // すべてのリストを隠す
             document.querySelectorAll('.item-list').forEach(list => list.classList.remove('active'));
 
-            // クリックされたボタンとリストだけアクティブにする
             event.target.classList.add('active');
             document.getElementById('tab-' + tabName).classList.add('active');
         }
 
-        // パーツ着せ替え機能（汎用）
+        // 汎用パーツ着せ替え機能
+        // layerId: どのレイヤーを変えるか（例: layer-hair-front）
+        // imageName: どの画像ファイルを使うか（例: hair1_front）※assets/と.pngは自動でつきます
         function setPart(layerId, imageName) {
             const layer = document.getElementById(layerId);
             if (imageName) {
-                // 画像がある場合（assetsフォルダの中を見る設定）
                 layer.src = `assets/${imageName}.png`;
                 layer.style.display = 'block';
             } else {
-                // 「なし」の場合
                 layer.src = '';
                 layer.style.display = 'none';
             }
         }
-
-        // 髪型セット（前髪と後ろ髪を同時に変える特別処理）
-        function setHair(hairName) {
-            if (hairName) {
-                document.getElementById('layer-hair-front').src = `assets/${hairName}_front.png`;
-                document.getElementById('layer-hair-back').src = `assets/${hairName}_back.png`;
-            } else {
-                document.getElementById('layer-hair-front').src = '';
-                document.getElementById('layer-hair-back').src = '';
-            }
-        }
-
     </script>
 </body>
 </html>
