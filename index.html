@@ -27,18 +27,23 @@
             vertical-align: bottom;
         }
 
-        /* コンテナ（白い箱） */
+      /* コンテナ（修正：スマホならほぼ画面いっぱいに！） */
         .container {
-            width: 100%;
-            max-width: 480px; /* スマホ想定の最大幅 */
+            width: 100%; 
+            max-width: 600px; /* ← 480px から 600px に広げる */
             background: rgba(255, 255, 255, 0.95);
             min-height: 100vh;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            
-            /* ★中身を強制的に中央揃えにする魔法の3行★ */
             display: flex;
             flex-direction: column;
-            align-items: center; 
+            align-items: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            margin: 0 auto;
+        }
+
+        /* ロゴ（修正：もっと大きく！） */
+        .logo {
+            width: 280px; /* ← 大きくする */
+            max-width: 80%; /* 画面からはみ出さないように */
         }
 
         /* --- ヘッダー --- */
