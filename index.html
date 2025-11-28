@@ -6,6 +6,12 @@
     <title>わたすて - WATASUTE</title>
     <style>
         /* --- 全体のデザイン設定 --- */
+        
+        /* ★魔法の呪文：すべてのサイズの計算を「枠線込み」にする */
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: "Helvetica Neue", Arial, sans-serif;
             margin: 0;
@@ -14,11 +20,11 @@
             background-image: url('assets/bg_pattern.png');
             background-size: 100px;
             color: #333;
-            /* 画面全体の中央寄せ */
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
+            overflow-x: hidden; /* 横スクロールを禁止 */
         }
 
         img {
@@ -27,11 +33,10 @@
             vertical-align: bottom;
         }
 
-     /* コンテナ（修正：見切れ防止） */
+        /* コンテナ（スマホアプリ風の枠） */
         .container {
             width: 100%;
-            /* max-width: 600px; ← これだとスマホによっては広すぎます */
-            max-width: 100%; /* ← これで画面幅ぴったりに収まります！ */
+            max-width: 480px; /* PCで見てもスマホサイズを維持 */
             background: rgba(255, 255, 255, 0.95);
             min-height: 100vh;
             display: flex;
@@ -39,12 +44,8 @@
             align-items: center;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
             margin: 0 auto;
-            overflow-x: hidden; /* 横スクロール防止 */
-        }
-        /* ロゴ（修正：もっと大きく！） */
-        .logo {
-            width: 280px; /* ← 大きくする */
-            max-width: 80%; /* 画面からはみ出さないように */
+            padding-bottom: 50px;
+            overflow: hidden; /* はみ出し防止 */
         }
 
         /* --- ヘッダー --- */
@@ -53,58 +54,41 @@
             padding: 15px 0;
             text-align: center;
             position: relative;
-            /* Flexboxで中身を中央に */
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
-        .logo {
-            width: 250px;
-            max-width: 60%;
-        }
-       .menu-icon {
+        .logo { width: 220px; max-width: 60%; }
+        .menu-icon {
             position: absolute;
-            left: 15px; /* ← 20pxから少し左へ */
-            top: 20px; /* 上からの位置 */
-            width: 30px;
-            cursor: pointer;
-            z-index: 10; /* 他のものより手前に */
+            left: 15px; top: 50%; transform: translateY(-50%);
+            width: 30px; cursor: pointer;
         }
 
-        /* メインビジュアル */
         .main-visual {
             width: 100%;
-            height: auto;
             display: block;
-            margin-bottom: 10px;
-        }
-
-        /* ヘッダーボタン類 */
-        .header-buttons {
-            width: 95%;
-            display: flex;
-            justify-content: center; /* 横並びの中央寄せ */
-            gap: 10px;
             margin-bottom: 20px;
         }
-        .header-btn {
-            width: 45%;
-            max-width: 200px;
-            cursor: pointer;
-        }
 
-        /* お知らせマーキー */
+        .header-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            width: 100%;
+            padding: 0 10px;
+        }
+        .header-btn { width: 45%; max-width: 160px; cursor: pointer; }
+
+        /* お知らせマーキー（修正：はみ出し防止） */
         .news-ticker {
-            width: 95%;
+            width: 90%; /* ← 95%から90%にして余裕を持たせる */
             height: 40px;
             background-image: url('assets/bg_news.png');
-            background-size: cover;
-            background-position: center;
+            background-size: 100% 100%; /* 画像を引き伸ばして合わせる */
             display: flex;
             align-items: center;
             overflow: hidden;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
+            margin: 0 auto 20px auto;
+            font-size: 0.8rem; /* 文字サイズ調整 */
             color: #333;
             white-space: nowrap;
             border-radius: 5px;
@@ -119,195 +103,96 @@
             100% { transform: translate(-100%, 0); }
         }
 
-        /* スタートボタンエリア */
-        .start-area {
-            width: 100%;
-            display: flex; /* Flexboxに変更 */
-            flex-direction: column; /* 縦並び */
-            align-items: center; /* 中央寄せ */
-            margin-bottom: 30px;
-        }
+        .start-area { width: 100%; text-align: center; margin-bottom: 30px; }
         .btn-start {
-            width: 85%;
-            max-width: 350px;
+            width: 80%; /* 幅を調整 */
+            max-width: 300px;
+            display: block;
+            margin: 0 auto;
             cursor: pointer;
             transition: transform 0.1s;
         }
         .btn-start:active { transform: scale(0.95); }
 
-        /* --- おすすめコーデ --- */
-        .slider-area {
-            width: 90%;
+        /* --- スライダー共通設定 --- */
+        .slider-area, .recommend-area {
+            width: 92%; /* 左右に4%ずつの余白 */
             background: #d0f0f0;
-            padding: 15px;
+            padding: 15px 10px; /* 内側の余白 */
             border-radius: 15px;
-            /* テキストも中央寄せ */
             text-align: center;
-            margin-bottom: 30px;
+            margin: 0 auto 20px auto;
             position: relative;
-            box-sizing: border-box;
-            /* Flexアイテムとして中央配置 */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
-      /* タイトルを中央寄せにする魔法のコード */
         .slider-title {
             font-weight: bold;
             margin-bottom: 10px;
             color: #333;
-            text-align: center !important; /* ★強制的に中央寄せ！ */
-            padding-left: 0 !important;    /* ★左の余白を消す！ */
-            width: 100%;                   /* ★幅いっぱいに */
+            text-align: center;
+            font-size: 0.9rem;
         }
-
-        /* 履歴画像などを中央に寄せる */
         .slider-content {
             display: flex;
-            justify-content: center; /* 中央寄せ */
+            justify-content: center;
             gap: 10px;
             overflow-x: auto;
             width: 100%;
-            padding-bottom: 10px;
+            padding-bottom: 5px;
         }
+        /* スクロールバーを隠す（スマホ用） */
+        .slider-content::-webkit-scrollbar { display: none; }
+
         .thumb-img {
-            width: 80px;
-            height: 100px;
+            width: 80px; height: 100px;
             object-fit: cover;
-            border-radius: 5px;
-            border: 2px solid white;
-            background: white;
-            flex-shrink: 0;
+            border-radius: 5px; border: 2px solid white;
+            background: white; flex-shrink: 0;
         }
         .arrow-icon {
-            width: 20px;
-            position: absolute;
-            right: 5px;
-            top: 50%;
-            transform: translateY(-50%);
-            opacity: 0.5;
-            pointer-events: none;
+            width: 20px; position: absolute; right: 5px; top: 60%;
+            opacity: 0.5; pointer-events: none;
         }
 
-        /* --- オススメアイテム --- */
-        .recommend-area {
-            width: 90%;
-            background: #d0f0f0;
-            padding: 15px;
-            border-radius: 15px;
-            text-align: center;
-            margin-bottom: 30px;
-            box-sizing: border-box;
-            /* Flexアイテムとして中央配置 */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
         .item-grid {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            width: 100%;
+            display: flex; justify-content: center; flex-wrap: wrap; gap: 8px;
         }
         .item-box {
-            background: white;
-            border-radius: 8px;
-            padding: 5px;
-            width: 70px;
-            height: 70px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: white; border-radius: 8px; padding: 5px;
+            width: 70px; height: 70px;
+            display: flex; align-items: center; justify-content: center;
         }
 
-        /* --- SNSリンク --- */
-        .sns-area { 
-            width: 100%;
-            text-align: center; 
-            margin-bottom: 40px; 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .sns-title {
-            font-family: 'Arial Black', sans-serif;
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-        }
-        .sns-icons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-        .sns-icon { width: 50px; cursor: pointer; }
+        .sns-area { margin: 30px 0; text-align: center; }
+        .sns-icons { display: flex; justify-content: center; gap: 20px; margin-top: 10px;}
+        .sns-icon { width: 50px; }
 
-        /* --- フッター --- */
         footer {
-            width: 100%;
-            background: #d0f0f0;
-            padding: 30px 0;
-            text-align: center;
-            font-size: 0.8rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .footer-logo {
-            font-family: 'Arial Black', sans-serif;
-            font-size: 1.5rem;
-            color: #ff8fab;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 0 white;
+            width: 100%; background: #d0f0f0; padding: 30px 0;
+            text-align: center; font-size: 0.8rem; margin-top: auto;
         }
         .footer-links {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            text-align: left;
-            width: 80%;
-            margin-bottom: 30px;
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 10px; text-align: left; width: 80%; margin: 0 auto 30px auto;
         }
-        .footer-link { color: #555; text-decoration: none; padding: 5px; }
-        .banner-creator {
-            width: 90%;
-            max-width: 300px;
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
+        .footer-link { color: #555; text-decoration: none; }
+        .banner-creator { width: 90%; max-width: 300px; margin-bottom: 20px; }
 
-        /* =========================================
-           着せ替え画面
-           ========================================= */
+        /* --- 着せ替え画面（スタイル維持） --- */
         #maker-screen {
-            display: none;
-            width: 100%;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 20px;
+            display: none; width: 100%; flex-direction: column; align-items: center; padding-top: 20px;
         }
-
+        /* ...以下の着せ替え画面のCSSはそのまま... */
         #avatar-display {
-            width: 320px;
-            height: 320px;
-            background-color: #fff;
-            border-radius: 20px;
+            width: 300px; height: 300px; /* スマホ用に少し小さく調整 */
+            background-color: #fff; border-radius: 20px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 15px;
+            position: relative; overflow: hidden; margin-bottom: 15px;
             background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee), 
                               linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee);
-            background-size: 20px 20px;
-            background-position: 0 0, 10px 10px;
+            background-size: 20px 20px; background-position: 0 0, 10px 10px;
         }
-
-        .avatar-layer {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: contain; pointer-events: none;
-        }
-        
+        /* ... 他のCSSは変更なし ... */
+        .avatar-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
         #layer-background { z-index: 5; }
         #layer-hair-back  { z-index: 10; }
         #layer-body       { z-index: 20; }
@@ -318,55 +203,17 @@
         #layer-accessory  { z-index: 60; }
         #layer-frame      { z-index: 100; }
 
-        #controls {
-            width: 95%;
-            background: white;
-            padding: 15px;
-            border-radius: 20px 20px 0 0;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-            flex-grow: 1;
-        }
-
-        .tabs {
-            display: flex; gap: 10px; margin-bottom: 15px;
-            overflow-x: auto; white-space: nowrap; padding-bottom: 5px;
-        }
-        .tab-btn {
-            background: #f0f0f0; border: none; padding: 8px 15px;
-            border-radius: 20px; font-weight: bold; color: #888;
-            cursor: pointer; font-size: 0.9rem; flex-shrink: 0;
-        }
+        #controls { width: 100%; background: white; padding: 15px; border-radius: 20px 20px 0 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); flex-grow: 1; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
+        .tab-btn { background: #f0f0f0; border: none; padding: 8px 15px; border-radius: 20px; font-weight: bold; color: #888; white-space: nowrap; }
         .tab-btn.active { background: #ff8fab; color: white; }
-
-        .item-list {
-            display: none;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px; max-height: 300px; overflow-y: auto; padding-bottom: 50px;
-        }
+        .item-list { display: none; grid-template-columns: repeat(4, 1fr); gap: 10px; max-height: 300px; overflow-y: auto; padding-bottom: 50px; }
         .item-list.active { display: grid; }
-
-        .item-btn {
-            aspect-ratio: 1; background-color: #f9f9f9;
-            border: 2px solid #eee; border-radius: 8px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 0.7rem; flex-direction: column; text-align: center;
-            padding: 5px; word-break: break-all;
-        }
-        .item-btn:hover, .item-btn:active {
-            border-color: #ff8fab; background-color: #fff0f5;
-        }
-
-        .action-buttons {
-            display: flex; justify-content: space-between;
-            width: 320px; margin-bottom: 10px;
-        }
-        .btn-action {
-            background: #eee; border: none; padding: 8px 15px;
-            border-radius: 20px; font-size: 0.8rem; cursor: pointer; color: #555;
-        }
-        .btn-save {
-            background: #ff8fab; color: white; font-weight: bold; padding: 8px 30px;
-        }
+        .item-btn { aspect-ratio: 1; background-color: #f9f9f9; border: 2px solid #eee; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; flex-direction: column; text-align: center; padding: 5px; word-break: break-all; }
+        .item-btn:hover, .item-btn:active { border-color: #ff8fab; background-color: #fff0f5; }
+        .action-buttons { display: flex; justify-content: space-between; width: 300px; margin-bottom: 10px; }
+        .btn-action { background: #eee; border: none; padding: 8px 15px; border-radius: 20px; font-size: 0.8rem; color: #555; }
+        .btn-save { background: #ff8fab; color: white; font-weight: bold; padding: 8px 30px; }
     </style>
 </head>
 <body>
