@@ -27,10 +27,11 @@
             vertical-align: bottom;
         }
 
-      /* コンテナ（修正：スマホならほぼ画面いっぱいに！） */
+     /* コンテナ（修正：見切れ防止） */
         .container {
-            width: 100%; 
-            max-width: 600px; /* ← 480px から 600px に広げる */
+            width: 100%;
+            /* max-width: 600px; ← これだとスマホによっては広すぎます */
+            max-width: 100%; /* ← これで画面幅ぴったりに収まります！ */
             background: rgba(255, 255, 255, 0.95);
             min-height: 100vh;
             display: flex;
@@ -38,8 +39,8 @@
             align-items: center;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
             margin: 0 auto;
+            overflow-x: hidden; /* 横スクロール防止 */
         }
-
         /* ロゴ（修正：もっと大きく！） */
         .logo {
             width: 280px; /* ← 大きくする */
@@ -61,13 +62,13 @@
             width: 250px;
             max-width: 60%;
         }
-        .menu-icon {
+       .menu-icon {
             position: absolute;
-            left: 20px; 
-            /* 上下中央揃えの補正 */
-            top: 50%;
-            transform: translateY(-50%);
-            width: 30px; cursor: pointer;
+            left: 15px; /* ← 20pxから少し左へ */
+            top: 20px; /* 上からの位置 */
+            width: 30px;
+            cursor: pointer;
+            z-index: 10; /* 他のものより手前に */
         }
 
         /* メインビジュアル */
@@ -150,15 +151,20 @@
             flex-direction: column;
             align-items: center;
         }
+      /* タイトルを中央寄せにする魔法のコード */
         .slider-title {
             font-weight: bold;
             margin-bottom: 10px;
             color: #333;
-            width: 100%; /* 幅いっぱい使う */
+            text-align: center !important; /* ★強制的に中央寄せ！ */
+            padding-left: 0 !important;    /* ★左の余白を消す！ */
+            width: 100%;                   /* ★幅いっぱいに */
         }
+
+        /* 履歴画像などを中央に寄せる */
         .slider-content {
             display: flex;
-            justify-content: center;
+            justify-content: center; /* 中央寄せ */
             gap: 10px;
             overflow-x: auto;
             width: 100%;
