@@ -39,7 +39,7 @@
             margin: 0 auto; /* 画面中央寄せ */
         }
 
-        /* --- ヘッダーエリア --- */
+       /* --- ヘッダー --- */
         header {
             width: 100%;
             padding: 15px 0;
@@ -47,21 +47,22 @@
             position: relative;
         }
         .logo {
-            width: 180px;
+            width: 250px; /* ← 180px から 250px にアップ！ */
+            max-width: 60%; /* 画面幅の60%までに制限 */
         }
         .menu-icon {
             position: absolute;
-            left: 20px;
-            top: 20px;
-            width: 30px;
-            cursor: pointer;
+            left: 20px; top: 50%; /* 上下中央に配置 */
+            transform: translateY(-50%); /* ズレ補正 */
+            width: 30px; cursor: pointer;
         }
 
-        /* メインビジュアル（修正：比率を保つ） */
+        /* メインビジュアル（余白を詰める） */
         .main-visual {
             width: 100%;
-            height: auto; 
-            margin-bottom: 20px;
+            height: auto;
+            display: block;
+            margin: 0 auto 10px auto; /* ← 下の余白を 20px から 10px に減らす */
         }
 
         /* ヘッダーボタン類 */
